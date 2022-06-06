@@ -8,7 +8,7 @@
     facility: "{{ equinix_metal_facility }}"
     state: active
     tags: "{{ equinix_metal_hostname_prefix }}-gpu-cluster"
-    wait_timeout: 600
+    wait_timeout: 1200
   register: bastion_host
 
 - name: Add bastion host to the inventory
@@ -17,10 +17,24 @@
     ansible_host: "{{ bastion_host.devices[0].public_ipv4 }}"
     ansible_user: root
 
+- name: Add bastion fingerprint to known hosts
+  connection: local
+  shell: |
+    ssh-keygen -F {{ hostvars.bastion.ansible_host }} ||
+    ssh-keyscan -H {{ hostvars.bastion.ansible_host }} >> ~/.ssh/known_hosts
+  register: known_hosts_update
+  changed_when: "'found' not in known_hosts_update.stdout"
+
 - name: Install Podman
   package:
     name: podman
     state: present
+  delegate_to: bastion
+
+- name: Create Web server directory
+  file:
+    path: /var/tmp/ai
+    state: directory
   delegate_to: bastion
 
 - name: Prepare assisted ISO for iPXE

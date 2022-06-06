@@ -1,5 +1,5 @@
 ---
-- name: Single-Node OpenShift (SNO) with GPU on Equinix Metal
+- name: Multi-Node OpenShift with GPU on Equinix Metal
   gather_facts: no
   hosts: localhost
 
@@ -13,7 +13,7 @@
         state: present
 
   vars:
-    cluster_name: gpu-equinix-sno
+    cluster_name: gpu-equinix-multi-node
 
   tasks:
 
@@ -27,7 +27,7 @@
         state: present
         parameters:
           openshift_version: "{{ openshift_version }}"
-          sno: true
+          sno: false
           minimal: false
           pull_secret: "{{ pull_secret_path }}"
           base_dns_domain: "{{ openshift_base_domain }}"
@@ -50,6 +50,17 @@
       include_role:
         name: openshift_nodes
       vars:
-        machine_size: c3.medium.x86 # g2.large.x86
+        machine_size: c3.small.x86
         roles:
-        - sno
+        - control-1
+        - control-2
+        - control-3
+
+    - name: Provision worker nodes
+      include_role:
+        name: openshift_nodes
+      vars:
+        machine_size: c3.medium.x86
+        roles:
+        - worker-1
+        - worker-2

@@ -1,2 +1,2 @@
 bastion_size: c3.small.x86
-bastion_os: centos_8
+bastion_os: rocky_8
