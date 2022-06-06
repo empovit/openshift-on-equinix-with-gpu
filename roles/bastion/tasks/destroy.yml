@@ -1,7 +1,3 @@
-- name: Install Packet Python
-  pip:
-    name: packet-python
-
 - name: Destroy Equinix Metal host
   equinix.metal.device:
     api_token: "{{ equinix_metal_api_key }}"

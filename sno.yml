@@ -4,4 +4,52 @@
   hosts: localhost
 
   roles:
-    - bastion
+    - karmab.ansible_aicli_modules
+
+  pre_tasks:
+    - name: Install Python prerequisites
+      pip:
+        name: aicli>=99.0.202205110654.202103111306
+        state: present
+
+  vars:
+    cluster_name: sno-equinix
+    openshift_version: "4.10.11"
+    openshift_base_domain: redhat.com
+    ssh_public_key: "~/.ssh/id_rsa.pub"
+    is_sno: true
+
+  tasks:
+
+    - name: Create assisted cluster
+      ai_cluster:
+        name: "{{ cluster_name }}"
+        state: present
+        parameters:
+          openshift_version: "{{ openshift_version }}"
+          sno: "{{ is_sno }}"
+          minimal: false
+          pull_secret: "{{ pull_secret_path }}"
+          base_dns_domain: "{{ openshift_base_domain }}"
+          ssh_public_key: "{{ lookup('file', ssh_public_key) }}"
+        offlinetoken: "{{ ocm_offline_token }}"
+
+    - name: Read assisted cluster's InfraEnv
+      ai_infraenv_info:
+        name: "{{ cluster_name }}"
+        offlinetoken: "{{ ocm_offline_token }}"
+      register: assisted_infraenv
+
+    - name: Provision bastion host
+      include_role:
+        name: bastion
+      vars:
+        iso_download_url: "{{ assisted_infraenv.download_url }}"
+
+    - name: Provision control nodes
+      include_role:
+        name: openshift_nodes
+      vars:
+        machine_size: c3.medium.x86
+        roles:
+        - sno

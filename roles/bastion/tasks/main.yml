@@ -1,7 +1,3 @@
-- name: Install Packet Python
-  pip:
-    name: packet-python
-
 - name: Create bastion host
   equinix.metal.device:
     api_token: "{{ equinix_metal_api_key }}"
@@ -13,3 +9,42 @@
     state: active
     tags: "{{ equinix_metal_hostname_prefix }}-gpu-cluster"
     wait_timeout: 600
+  register: bastion_host
+
+- name: Add bastion host to the inventory
+  add_host:
+    hostname: bastion
+    ansible_host: "{{ bastion_host.devices[0].public_ipv4 }}"
+    ansible_user: root
+
+- name: Install Podman
+  package:
+    name: podman
+    state: present
+  delegate_to: bastion
+
+- name: Prepare assisted ISO for iPXE
+  containers.podman.podman_container:
+    name: assisted_ipxe
+    image: quay.io/ohadlevy/ai-ipxe
+    env:
+      ISO_URL: "{{ iso_download_url }}"
+      BASE_URL: "{{ bastion_host.devices[0].private_ipv4 }}"
+    volume:
+    - /var/tmp/ai:/data:Z
+    network: host
+    rm: yes
+    state: started
+  delegate_to: bastion
+
+- name: Start web server
+  containers.podman.podman_container:
+    name: web_server
+    image: bitnami/nginx:latest
+    volume:
+    - /var/tmp/ai/ipxe:/app:ro
+    ports:
+      - "{{ bastion_host.devices[0].private_ipv4 }}:80:8080"
+    rm: yes
+    state: started
+  delegate_to: bastion

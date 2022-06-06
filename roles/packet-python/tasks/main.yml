@@ -1,0 +1,4 @@
+- name: Install Packet Python
+  pip:
+    name: packet-python
+    state: present
