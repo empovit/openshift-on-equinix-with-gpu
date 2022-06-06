@@ -1,0 +1,6 @@
+---
+roles:
+  - name: karmab.ansible_aicli_modules
+
+collections:
+  - name: equinix.metal

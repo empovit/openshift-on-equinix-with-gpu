@@ -1,0 +1,10 @@
+- name: Install Packet Python
+  pip:
+    name: packet-python
+
+- name: Destroy Equinix Metal host
+  equinix.metal.device:
+    api_token: "{{ equinix_metal_api_key }}"
+    project_id: "{{ equinix_metal_project_id }}"
+    hostnames: "{{ equinix_metal_hostname_prefix }}-gpu-bastion"
+    state: absent

@@ -1,0 +1,7 @@
+---
+- name: Single-Node OpenShift (SNO) with GPU on Equinix Metal
+  gather_facts: no
+  hosts: localhost
+
+  roles:
+    - bastion

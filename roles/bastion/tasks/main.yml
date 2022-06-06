@@ -1,0 +1,15 @@
+- name: Install Packet Python
+  pip:
+    name: packet-python
+
+- name: Create bastion host
+  equinix.metal.device:
+    api_token: "{{ equinix_metal_api_key }}"
+    project_id: "{{ equinix_metal_project_id }}"
+    hostnames: "{{ equinix_metal_hostname_prefix }}-gpu-bastion"
+    operating_system: "{{ bastion_os }}"
+    plan: "{{ bastion_size }}"
+    facility: "{{ equinix_metal_facility }}"
+    state: active
+    tags: "{{ equinix_metal_hostname_prefix }}-gpu-cluster"
+    wait_timeout: 600
