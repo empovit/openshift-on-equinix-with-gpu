@@ -29,3 +29,10 @@
 - name: Set kubeconfig path
   set_fact:
     kubeconfig: "{{ temp_directory }}/kubeconfig.{{ assisted_cluster.id }}"
+
+- name: Print cluster information
+  debug:
+    msg:
+    - "Assisted cluster ID: {{ assisted_cluster.id }}"
+    - "API VIP: {{ assisted_cluster.api_vip }}"
+    - "export KUBECONFIG={{ kubeconfig }}"
