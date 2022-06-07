@@ -1,0 +1,5 @@
+- name: Delete assisted cluster
+  ai_cluster:
+    name: "{{ cluster_name }}"
+    offlinetoken: "{{ ocm_offline_token }}"
+    state: absent

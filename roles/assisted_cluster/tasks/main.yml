@@ -1,0 +1,33 @@
+# work around the role not handing 'ready'
+- name: Wait for cluster to become ready
+  ai_cluster_info:
+    name: "{{ cluster_name }}"
+    offlinetoken: "{{ ocm_offline_token }}"
+  register: assisted_cluster
+  when: assisted_cluster.status != 'installed'
+  until: assisted_cluster.status == 'ready'
+  retries: 40
+  delay: 30
+
+- name: Start cluster installation
+  ai_cluster:
+    name: "{{ cluster_name }}"
+    offlinetoken: "{{ ocm_offline_token }}"
+    state: installed
+
+- name: Retrieve installed cluster
+  ai_cluster_info:
+    name: "{{ cluster_name }}"
+    offlinetoken: "{{ ocm_offline_token }}"
+  register: assisted_cluster
+
+- name: Create temp directory
+  file:
+    path: "{{ temp_directory }}"
+    state: directory
+
+- name: Download cluster kubeconfig
+  command: "aicli --token {{ ocm_offline_token }} download kubeconfig --path {{ temp_directory }} {{ assisted_cluster.id }}"
+
+- name: Download cluster password
+  command: "aicli --token {{ ocm_offline_token }} download kubeadmin-password --path {{ temp_directory }} {{ assisted_cluster.id }}"

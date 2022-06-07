@@ -1,0 +1,8 @@
+- name: Destroy Equinix nodes
+  include_role:
+    name: metal_cleanup
+
+- name: Delete assisted cluster
+  include_role:
+    name: assisted_cluster
+    tasks_from: cleanup

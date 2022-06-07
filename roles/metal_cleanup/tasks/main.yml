@@ -1,0 +1,19 @@
+- name: Install Python dependencies
+  pip:
+    name: jmespath
+
+- name: Find Equinix Metal hosts
+  equinix.metal.device_info:
+    api_token: "{{ equinix_metal_api_key }}"
+    project_id: "{{ equinix_metal_project_id }}"
+  register: equinix_devices
+
+- name: Destroy Equinix Metal hosts
+  equinix.metal.device:
+    api_token: "{{ equinix_metal_api_key }}"
+    project_id: "{{ equinix_metal_project_id }}"
+    device_ids: "{{ equinix_devices | community.general.json_query(host_query) }}"
+    state: absent
+  vars:
+    host_query: "[?contains(tags,'{{ equinix_metal_hostname_prefix }}') && contains(tags, '{{ cluster_name }}')].id"
+

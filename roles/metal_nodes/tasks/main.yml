@@ -2,13 +2,15 @@
   equinix.metal.device:
     api_token: "{{ equinix_metal_api_key }}"
     project_id: "{{ equinix_metal_project_id }}"
-    hostnames: "{{ [equinix_metal_hostname_prefix] | product(roles) | map('join', '-gpu-') }}"
+    hostnames: "{{ [equinix_metal_hostname_prefix] | product(roles) | map('join', '-') }}"
     count: "{{ roles | length }}"
     operating_system: custom_ipxe
     plan: "{{ machine_size }}"
     facility: "{{ equinix_metal_facility }}"
     state: active
-    tags: "{{ equinix_metal_hostname_prefix }}-gpu-cluster"
+    tags:
+      - "{{ cluster_name }}"
+      - "{{ equinix_metal_hostname_prefix }}"
     wait_timeout: 600
     always_pxe: yes
     user_data: |

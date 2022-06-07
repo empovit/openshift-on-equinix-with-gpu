@@ -48,8 +48,12 @@
 
     - name: Provision control nodes
       include_role:
-        name: openshift_nodes
+        name: metal_nodes
       vars:
         machine_size: c3.medium.x86 # g2.large.x86
         roles:
         - sno
+
+    - name: Install OpenShift cluster
+      include_role:
+        assisted_cluster
