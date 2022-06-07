@@ -4,12 +4,11 @@
     name: "{{ cluster_name }}"
     offlinetoken: "{{ ocm_offline_token }}"
   register: assisted_cluster
-  when: assisted_cluster.status != 'installed'
-  until: assisted_cluster.status == 'ready'
+  until: assisted_cluster.status == 'ready' or assisted_cluster.status == 'installed'
   retries: 40
   delay: 30
 
-- name: Start cluster installation
+- name: Install cluster
   ai_cluster:
     name: "{{ cluster_name }}"
     offlinetoken: "{{ ocm_offline_token }}"

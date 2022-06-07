@@ -12,7 +12,7 @@
       - "{{ cluster_name }}"
       - "{{ equinix_metal_hostname_prefix }}"
     wait_timeout: 600
-    always_pxe: yes
+    always_pxe: false
     user_data: |
       #!ipxe
 

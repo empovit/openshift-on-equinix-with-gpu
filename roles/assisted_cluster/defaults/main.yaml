@@ -1,1 +1,1 @@
-temp_directory: "{{ playbook dir }}/tmp"
+temp_directory: "{{ playbook_dir }}/tmp"
