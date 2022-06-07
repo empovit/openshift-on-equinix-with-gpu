@@ -3,17 +3,24 @@
   gather_facts: no
   hosts: localhost
 
+  vars:
+    cluster_name: gpu-equinix-sno
+    temp_directory: "{{ playbook_dir }}/tmp"
+
   roles:
     - karmab.ansible_aicli_modules
 
   pre_tasks:
+
     - name: Install Python prerequisites
       pip:
         name: aicli>=99.0.202205110654.202103111306
         state: present
 
-  vars:
-    cluster_name: gpu-equinix-sno
+    - name: Create temp directory
+      file:
+        path: "{{ temp_directory }}"
+        state: directory
 
   tasks:
 
@@ -50,10 +57,16 @@
       include_role:
         name: metal_nodes
       vars:
-        machine_size: c3.medium.x86 # g2.large.x86
+        machine_size: g2.large.x86 # c3.small.x86 for testing
         roles:
         - sno
 
     - name: Install OpenShift cluster
       include_role:
         name: assisted_cluster
+
+    - name: Install GPU Operator
+      include_role:
+        name: openshift-on-vmware-with-vgpu/roles/gpu_operator
+      vars:
+        openshift_api_vip: "{{ assisted_cluster.api_vip }}"

@@ -1,0 +1,10 @@
+---
+- name: Clean up Single-Node OpenShift (SNO) resources
+  gather_facts: no
+  hosts: localhost
+
+  vars:
+    cluster_name: gpu-equinix-sno
+
+  roles:
+    - cleanup

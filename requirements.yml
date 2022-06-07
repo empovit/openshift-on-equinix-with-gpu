@@ -1,6 +1,8 @@
 ---
 roles:
   - name: karmab.ansible_aicli_modules
+  - src: https://github.com/empovit/openshift-on-vmware-with-vgpu
+    version: roles
 
 collections:
   - name: equinix.metal

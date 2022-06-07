@@ -15,5 +15,5 @@
     device_ids: "{{ equinix_devices | community.general.json_query(host_query) }}"
     state: absent
   vars:
-    host_query: "[?contains(tags,'{{ equinix_metal_hostname_prefix }}') && contains(tags, '{{ cluster_name }}')].id"
+    host_query: "devices[?contains(tags,'{{ equinix_metal_hostname_prefix }}') && contains(tags, '{{ cluster_name }}')].id"
 

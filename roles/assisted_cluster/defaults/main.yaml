@@ -1,1 +1,0 @@
-temp_directory: "{{ playbook_dir }}/tmp"

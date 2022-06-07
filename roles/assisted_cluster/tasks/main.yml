@@ -20,13 +20,12 @@
     offlinetoken: "{{ ocm_offline_token }}"
   register: assisted_cluster
 
-- name: Create temp directory
-  file:
-    path: "{{ temp_directory }}"
-    state: directory
-
 - name: Download cluster kubeconfig
   command: "aicli --token {{ ocm_offline_token }} download kubeconfig --path {{ temp_directory }} {{ assisted_cluster.id }}"
 
 - name: Download cluster password
   command: "aicli --token {{ ocm_offline_token }} download kubeadmin-password --path {{ temp_directory }} {{ assisted_cluster.id }}"
+
+- name: Set kubeconfig path
+  set_fact:
+    kubeconfig: "{{ temp_directory }}/kubeconfig.{{ assisted_cluster.id }}"
