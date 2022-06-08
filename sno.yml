@@ -67,7 +67,6 @@
 
     - name: Install GPU Operator
       include_role:
-        name: openshift-on-vmware-with-vgpu/roles/gpu_operator
+        name: empovit.gpu_operator
       vars:
         openshift_api_vip: "{{ assisted_cluster.api_vip }}"
-        gpu_type: gpu
