@@ -1,0 +1,8 @@
+- name: Destroy bastion host
+  equinix.metal.device:
+    api_token: "{{ equinix_metal_api_key }}"
+    project_id: "{{ equinix_metal_project_id }}"
+    facility: "{{ equinix_metal_facility }}"
+    device_ids:
+    - "{{ bastion_host.devices[0].id }}"
+    state: absent
