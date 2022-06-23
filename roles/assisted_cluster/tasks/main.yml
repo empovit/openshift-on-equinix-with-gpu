@@ -30,6 +30,11 @@
   set_fact:
     kubeconfig: "{{ temp_directory }}/kubeconfig.{{ assisted_cluster.id }}"
 
+- name: Update kubeconfig permissions
+  file:
+    path: "{{ kubeconfig }}"
+    mode: '600'
+
 - name: Print cluster information
   debug:
     msg:

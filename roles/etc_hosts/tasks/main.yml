@@ -1,0 +1,52 @@
+- name: Warn if the API VIP already in {{ dns_resolution_file }}
+  debug:
+    msg: "WARNING: {{ new_api_vip }} is already associated with a cluster in {{ dns_resolution_file }}. You might need to update the file manually"
+  when: update_etc_hosts and new_api_vip in lookup('file', dns_resolution_file)
+
+- name: Warn if the ingress VIP already in {{ dns_resolution_file }}
+  debug:
+    msg: "WARNING: {{ new_ingress_vip }} is already associated with a cluster in {{ dns_resolution_file }}. You might need to update the file manually"
+  when: update_etc_hosts and new_ingress_vip in lookup('file', dns_resolution_file)
+
+- name: Update API VIP in {{ dns_resolution_file }}
+  replace:
+    path: "{{ dns_resolution_file }}"
+    regexp: "{{ api_vip_regex }}"
+    replace: "{{ new_api_vip }}\\2"
+    backup: yes
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: update_etc_hosts
+
+- name: Update ingress VIP in {{ dns_resolution_file }}
+  replace:
+    path: "{{ dns_resolution_file }}"
+    regexp: "{{ ingress_vip_regex }}"
+    replace: "{{ new_ingress_vip }}\\2"
+    backup: yes
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: update_etc_hosts
+
+- name: Add entries to {{ dns_resolution_file }}
+  lineinfile:
+    path: "{{ dns_resolution_file }}"
+    line: |
+
+      {{ new_api_vip }}   api.{{ cluster_name }}.{{ openshift_base_domain }}
+      {{ new_ingress_vip }}   oauth-openshift.apps.{{ cluster_name }}.{{ openshift_base_domain }}
+      {{ new_ingress_vip }}   console-openshift-console.apps.{{ cluster_name }}.{{ openshift_base_domain }}
+      {{ new_ingress_vip }}   grafana-openshift-monitoring.apps.{{ cluster_name }}.{{ openshift_base_domain }}
+      {{ new_ingress_vip }}   thanos-querier-openshift-monitoring.apps.{{ cluster_name }}.{{ openshift_base_domain }}
+      {{ new_ingress_vip }}   prometheus-k8s-openshift-monitoring.apps.{{ cluster_name }}.{{ openshift_base_domain }}
+      {{ new_ingress_vip }}   alertmanager-main-openshift-monitoring.apps.{{ cluster_name }}.{{ openshift_base_domain }}
+    backup: yes
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: update_etc_hosts and dns_name not in lookup('file', dns_resolution_file)

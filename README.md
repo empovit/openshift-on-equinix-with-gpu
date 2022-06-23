@@ -24,6 +24,11 @@ Ansible playbooks for deploying a ready-to-use OpenShift cluster with GPU on Equ
 7. Create a variables file, e.g. `tmp/vars.yml`:
 
    ```yaml
+   cluster_name: <e.g. gpu-equinix-sno>
+   openshift_version: "4.10"
+   openshift_base_domain: <e.g. example.com>
+   ssh_public_key: <e.g. ~/.ssh/id_rsa.pub>
+
    equinix_metal_api_key: <token>
    equinix_metal_project_id: <project>
    equinix_metal_hostname_prefix: <e.g. username>
@@ -31,6 +36,12 @@ Ansible playbooks for deploying a ready-to-use OpenShift cluster with GPU on Equ
 
    pull_secret_path: <e.g. tmp/pull_secret.json>
    ocm_offline_token: <offline token>
+   ```
+
+   If you want _/etc/hosts_ to be automatically updated with your cluster's IP address, add
+
+   ```yaml
+   update_etc_hosts: true
    ```
 
 8. Run the playbook

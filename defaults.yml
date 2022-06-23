@@ -1,3 +1,0 @@
-openshift_version: "4.10.11"
-openshift_base_domain: redhat.com
-ssh_public_key: "~/.ssh/id_rsa.pub"

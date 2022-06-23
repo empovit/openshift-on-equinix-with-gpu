@@ -4,7 +4,6 @@
   hosts: localhost
 
   vars:
-    cluster_name: gpu-equinix-sno
     temp_directory: "{{ playbook_dir }}/tmp"
 
   roles:
@@ -23,10 +22,6 @@
         state: directory
 
   tasks:
-
-    - name: Include global vars
-      include_vars:
-        file: defaults.yml
 
     - name: Create assisted cluster
       ai_cluster:
@@ -64,6 +59,13 @@
     - name: Install OpenShift cluster
       include_role:
         name: assisted_cluster
+
+    - name: Install OpenShift cluster
+      include_role:
+        name: etc_hosts
+      vars:
+        new_api_vip: "{{ assisted_cluster.api_vip }}"
+        new_ingress_vip: " {{ assisted_cluster.ingress_vip }}"
 
     - name: Delete bastion host
       include_role:
