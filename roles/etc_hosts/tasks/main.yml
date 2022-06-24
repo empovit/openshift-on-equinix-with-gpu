@@ -12,20 +12,21 @@
   replace:
     path: "{{ dns_resolution_file }}"
     regexp: "{{ api_vip_regex }}"
-    replace: "{{ api_vip }}\\2"
+    replace: "{{ api_vip }}   \\2"
     backup: yes
     owner: root
     group: root
     mode: '0644'
   become: true
   when: update_etc_hosts
+  register: _api_vip_update_result
 
 - name: Update ingress VIP in {{ dns_resolution_file }}
   replace:
     path: "{{ dns_resolution_file }}"
     regexp: "{{ ingress_vip_regex }}"
-    replace: "{{ ingress_vip }}\\2"
-    backup: yes
+    replace: "{{ ingress_vip }}   \\2"
+    backup: "{{ not _api_vip_update_result.changed }}" # don't create yet another backup file
     owner: root
     group: root
     mode: '0644'
