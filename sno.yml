@@ -64,8 +64,8 @@
       include_role:
         name: etc_hosts
       vars:
-        new_api_vip: "{{ assisted_cluster.api_vip }}"
-        new_ingress_vip: " {{ assisted_cluster.ingress_vip }}"
+        api_vip: "{{ assisted_cluster.api_vip }}"
+        ingress_vip: "{{ assisted_cluster.ingress_vip }}"
 
     - name: Delete bastion host
       include_role:

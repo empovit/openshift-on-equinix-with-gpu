@@ -40,4 +40,5 @@
     msg:
     - "Assisted cluster ID: {{ assisted_cluster.id }}"
     - "API VIP: {{ assisted_cluster.api_vip }}"
+    - "Ingress VIP: {{ assisted_cluster.ingress_vip }}"
     - "export KUBECONFIG={{ kubeconfig }}"
