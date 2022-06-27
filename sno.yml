@@ -4,7 +4,7 @@
   hosts: localhost
 
   vars:
-    temp_directory: "{{ playbook_dir }}/tmp"
+    temp_directory: tmp
 
   roles:
     - karmab.ansible_aicli_modules
