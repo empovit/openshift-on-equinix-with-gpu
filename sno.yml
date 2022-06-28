@@ -6,17 +6,14 @@
   vars:
     temp_directory: "{{ playbook_dir }}/tmp"
 
-  roles:
-    - karmab.ansible_aicli_modules
-
   pre_tasks:
 
-    - name: Install Python prerequisites
+    - name: Install Python dependencies
       pip:
-        name: aicli>=99.0.202205110654.202103111306
+        name: aicli
         state: present
 
-    - name: Create temp directory
+    - name: Make sure the temp directory exists
       file:
         path: "{{ temp_directory }}"
         state: directory
@@ -24,7 +21,7 @@
   tasks:
 
     - name: Create assisted cluster
-      ai_cluster:
+      karmab.aicli.ai_cluster:
         name: "{{ cluster_name }}"
         state: present
         parameters:
@@ -36,8 +33,8 @@
           ssh_public_key: "{{ lookup('file', ssh_public_key) }}"
         offlinetoken: "{{ ocm_offline_token }}"
 
-    - name: Read assisted cluster's InfraEnv
-      ai_infraenv_info:
+    - name: Read assisted cluster's InfraEnv for ISO download URL
+      karmab.aicli.ai_infraenv_info:
         name: "{{ cluster_name }}"
         offlinetoken: "{{ ocm_offline_token }}"
       register: assisted_infraenv
@@ -58,11 +55,11 @@
 
     - name: Install OpenShift cluster
       include_role:
-        name: assisted_cluster
+        name: empovit.assisted_openshift.cluster_installation
 
     - name: Install OpenShift cluster
       include_role:
-        name: etc_hosts
+        name: empovit.assisted_openshift.etc_hosts
       vars:
         api_vip: "{{ assisted_cluster.api_vip }}"
         ingress_vip: "{{ assisted_cluster.ingress_vip }}"

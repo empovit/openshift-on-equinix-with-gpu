@@ -3,8 +3,5 @@
   gather_facts: no
   hosts: localhost
 
-  vars:
-    cluster_name: gpu-equinix-sno
-
   roles:
     - cleanup

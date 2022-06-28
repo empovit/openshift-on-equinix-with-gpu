@@ -1,4 +1,0 @@
-dns_name: "{{ cluster_name }}.{{ openshift_base_domain }}"
-api_vip_regex: "([0-9\\.]+)\\s+(api\\.{{ dns_name | regex_escape() }})"
-ingress_vip_regex: "([0-9\\.]+)\\s+([a-z0-9\\-\\.]+\\.apps\\.{{ dns_name | regex_escape() }})"
-dns_resolution_file: /etc/hosts
