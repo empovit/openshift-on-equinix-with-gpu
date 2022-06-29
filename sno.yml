@@ -57,7 +57,7 @@
       include_role:
         name: empovit.assisted_openshift.cluster_installation
 
-    - name: Install OpenShift cluster
+    - name: Update DNS entries
       include_role:
         name: empovit.assisted_openshift.etc_hosts
       vars:
