@@ -3,9 +3,6 @@
   gather_facts: no
   hosts: localhost
 
-  vars:
-    temp_directory: "{{ playbook_dir }}/tmp"
-
   pre_tasks:
 
     - name: Install Python dependencies
@@ -15,7 +12,7 @@
 
     - name: Make sure the temp directory exists
       file:
-        path: "{{ temp_directory }}"
+        path: "{{ temp_dir }}"
         state: directory
 
   tasks:
@@ -56,6 +53,8 @@
     - name: Install OpenShift cluster
       include_role:
         name: empovit.assisted_openshift.cluster_installation
+      vars:
+        temp_directory: "{{ temp_dir }}"
 
     - name: Update DNS entries
       include_role:

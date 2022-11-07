@@ -47,7 +47,7 @@ Ansible playbooks for deploying a ready-to-use OpenShift cluster with GPU on Equ
 8. Run the playbook
 
    ```sh
-   ansible-playbook sno.yml -e "@tmp/vars.yml"
+   ansible-playbook sno.yml -e "@tmp/vars.yml" -e temp_dir=tmp
    ```
 
 # Cleaning Up
