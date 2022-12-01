@@ -1,17 +1,17 @@
 ---
-- name: Single-Node OpenShift (SNO) with NVIDIA GPU on Equinix Metal
+- name: Single-Node OpenShift (SNO) with OpenShift Virtualization and NVIDIA vGPU on Equinix Metal
   gather_facts: no
   hosts: localhost
 
   pre_tasks:
 
     - name: Install Python dependencies
-      ansible.builtin.pip:
+      pip:
         name: aicli
         state: present
 
     - name: Make sure the temp directory exists
-      ansible.builtin.file:
+      file:
         path: "{{ temp_dir }}"
         state: directory
 
@@ -28,6 +28,8 @@
           pull_secret: "{{ pull_secret_path }}"
           base_dns_domain: "{{ openshift_base_domain }}"
           ssh_public_key: "{{ lookup('file', ssh_public_key) }}"
+          olm_operators:
+            - name: cnv
         offlinetoken: "{{ ocm_offline_token }}"
 
     - name: Read assisted cluster's InfraEnv for ISO download URL
@@ -37,39 +39,39 @@
       register: assisted_infraenv
 
     - name: Provision bastion host
-      ansible.builtin.include_role:
+      include_role:
         name: bastion
       vars:
         iso_download_url: "{{ assisted_infraenv.download_url }}"
 
     - name: Provision control nodes
-      ansible.builtin.include_role:
+      include_role:
         name: metal_nodes
       vars:
-        machine_size: g2.large.x86 # c3.small.x86 for testing
+        machine_size: g2.large.x86 # c2.medium.x86 or c3.medium.x86 for testing
         roles:
         - sno
 
     - name: Install OpenShift cluster
-      ansible.builtin.include_role:
+      include_role:
         name: empovit.assisted_openshift.cluster_installation
       vars:
         temp_directory: "{{ temp_dir }}"
 
     - name: Update DNS entries
-      ansible.builtin.include_role:
+      include_role:
         name: empovit.assisted_openshift.etc_hosts
       vars:
         api_vip: "{{ assisted_cluster.api_vip }}"
         ingress_vip: "{{ assisted_cluster.ingress_vip }}"
 
     - name: Delete bastion host
-      ansible.builtin.include_role:
+      include_role:
         name: bastion
         tasks_from: destroy
 
-    - name: Install GPU Operator
-      ansible.builtin.include_role:
-        name: empovit.gpu_operator
-      vars:
-        openshift_api_vip: "{{ assisted_cluster.api_vip }}"
+    # - name: Install GPU Operator
+    #   include_role:
+    #     name: empovit.gpu_operator
+    #   vars:
+    #     openshift_api_vip: "{{ assisted_cluster.api_vip }}"

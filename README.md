@@ -55,3 +55,9 @@ Ansible playbooks for deploying a ready-to-use OpenShift cluster with GPU on Equ
 ```sh
 ansible-playbook sno-cleanup.yml -e "@tmp/vars.yml"
 ```
+
+# OpenShift Virtualization
+
+[OpenShift Virtualization](https://docs.openshift.com/container-platform/4.11/virt/about-virt.html)
+
+CNV operator for OpenShift Virtualization, formerly Container-Native Virtualization (CNV)
