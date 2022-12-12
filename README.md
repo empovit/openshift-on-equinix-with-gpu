@@ -58,7 +58,7 @@ ansible-playbook sno-cleanup.yml -e "@tmp/vars.yml"
 
 # OpenShift Virtualization
 
-[OpenShift Virtualization](https://docs.openshift.com/container-platform/4.11/virt/about-virt.html)
-[NVIDIA GPU Operator with OpenShift Virtualization¶](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/openshift/nvidia-gpu-operator-openshift-virtualization-vgpu-enablement.html)
+* [OpenShift Virtualization](https://docs.openshift.com/container-platform/4.11/virt/about-virt.html)
+* [NVIDIA GPU Operator with OpenShift Virtualization](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/openshift/nvidia-gpu-operator-openshift-virtualization-vgpu-enablement.html)
 
 CNV operator for OpenShift Virtualization, formerly Container-Native Virtualization (CNV)
