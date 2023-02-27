@@ -3,7 +3,7 @@
     api_token: "{{ equinix_metal_api_key }}"
     project_id: "{{ equinix_metal_project_id }}"
     hostnames: "{{ [equinix_metal_hostname_prefix] | product(roles) | map('join', '-') }}"
-    count: "{{ roles | length }}"
+    count: 1
     operating_system: custom_ipxe
     plan: "{{ machine_size }}"
     facility: "{{ equinix_metal_facility }}"

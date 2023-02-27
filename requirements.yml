@@ -5,6 +5,7 @@ roles:
     version: v1.0.0
 
 collections:
+  - name: containers.podman
   - name: equinix.metal
   - name: community.general
   - name: karmab.aicli
